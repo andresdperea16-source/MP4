@@ -4,11 +4,11 @@ Juego de duelo de cartas basado en Yu-Gi-Oh! desarrollado en Java 21 para la asi
 
 ## Integrantes
 
-| Nombre | Código |
-|--------|--------|
-| Andres Reyes | — |
-| Diego Fernando Pérez | 2559956 |
-| Santiago Romero Restrepo | 202559949 |
+|           Nombre         |  Código |
+|--------------------------|---------|
+| Andres David Perea Rios  | 2559770 |
+| Diego Fernando Pérez     | 2559956 |
+| Santiago Romero Restrepo | 2559949 |
 
 ---
 
