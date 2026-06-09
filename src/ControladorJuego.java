@@ -14,6 +14,7 @@ public class ControladorJuego {
         ventana.getBtnAtacar().addActionListener(e -> atacarGUI());
         ventana.getBtnActivarTrampa().addActionListener(e -> activarTrampaGUI());
         ventana.getBtnTerminarTurno().addActionListener(e -> terminarTurnoGUI());
+        ventana.getBtnGuardar().addActionListener(e -> guardarPartidaGUI());
 
         ventana.setLog("¡El duelo comienza! Turno de " + juego.getJugadorActual().getNombre());
         ventana.setTurno(juego.getNumeroTurno());
@@ -181,12 +182,37 @@ public class ControladorJuego {
         actualizarVista();
     }
 
+    private void guardarPartidaGUI() {
+        try {
+            GestorArchivos.guardarPartida(juego);
+            ventana.setLog("Partida guardada correctamente.");
+            JOptionPane.showMessageDialog(ventana,
+                "La partida fue guardada exitosamente.\nPuedes continuar desde el menu principal.",
+                "Partida guardada", JOptionPane.INFORMATION_MESSAGE);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(ventana,
+                "Error al guardar: " + ex.getMessage(),
+                "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     private void verificarGanador() {
         if (juego.hayGanador()) mostrarGanador(juego.getNombreGanador());
     }
 
     private void mostrarGanador(String nombre) {
         ventana.deshabilitarAcciones();
+
+        // Guardar resultado en el historial
+        GestorArchivos.guardarResultado(
+            juego.getJugador1().getNombre(),
+            juego.getJugador2().getNombre(),
+            nombre,
+            juego.getNumeroTurno(),
+            juego.getJugador1().getPuntosVida(),
+            juego.getJugador2().getPuntosVida()
+        );
+
         String mensaje = "<html><center>" +
                 "<font size='5' color='#C9A84C'><b>¡DUELO TERMINADO!</b></font><br><br>" +
                 "<font size='4' color='white'>¡<b>" + nombre + "</b> gana el duelo!</font><br><br>" +

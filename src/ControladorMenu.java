@@ -1,4 +1,5 @@
 import java.util.LinkedList;
+import javax.swing.JOptionPane;
 
 public class ControladorMenu {
 
@@ -8,6 +9,8 @@ public class ControladorMenu {
         this.menu = menu;
 
         menu.getBtnIniciar().addActionListener(e -> iniciarDuelo());
+        menu.getBtnCargar().addActionListener(e -> cargarPartida());
+        menu.getBtnEstadisticas().addActionListener(e -> mostrarEstadisticas());
     }
 
     private void iniciarDuelo() {
@@ -40,5 +43,33 @@ public class ControladorMenu {
         new ControladorJuego(juego, ventana);
 
         menu.dispose();
+    }
+
+    private void cargarPartida() {
+        // Verificar si hay una partida guardada
+        if (!GestorArchivos.hayPartidaGuardada()) {
+            menu.mostrarError("No hay ninguna partida guardada todavia.");
+            return;
+        }
+
+        try {
+            Juego juego = GestorArchivos.cargarPartida();
+
+            VentanaDuelo ventana = new VentanaDuelo(
+                juego.getJugador1().getNombre(),
+                juego.getJugador2().getNombre()
+            );
+
+            new ControladorJuego(juego, ventana);
+            menu.dispose();
+
+        } catch (Exception ex) {
+            menu.mostrarError("Error al cargar la partida: " + ex.getMessage());
+        }
+    }
+
+    private void mostrarEstadisticas() {
+        String stats = GestorArchivos.leerEstadisticas();
+        JOptionPane.showMessageDialog(menu, stats, "Estadisticas", JOptionPane.INFORMATION_MESSAGE);
     }
 }

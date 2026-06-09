@@ -6,6 +6,8 @@ public class MenuInicio extends JFrame {
     private JTextField campoNombre1;
     private JTextField campoNombre2;
     private JButton btnIniciar;
+    private JButton btnCargar;
+    private JButton btnEstadisticas;
 
     public MenuInicio() {
         setTitle("Yu-Gi-Oh! - Inicio");
@@ -70,16 +72,37 @@ public class MenuInicio extends JFrame {
         btnIniciar.setFocusPainted(false);
         btnIniciar.setBorder(BorderFactory.createLineBorder(new Color(201, 168, 76), 1));
         btnIniciar.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        btnCargar = new JButton("CARGAR PARTIDA");
+        btnCargar.setFont(new Font("SansSerif", Font.BOLD, 12));
+        btnCargar.setForeground(new Color(64, 180, 100));
+        btnCargar.setBackground(new Color(10, 12, 16));
+        btnCargar.setFocusPainted(false);
+        btnCargar.setBorder(BorderFactory.createLineBorder(new Color(64, 180, 100), 1));
+        btnCargar.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        btnEstadisticas = new JButton("ESTADÍSTICAS");
+        btnEstadisticas.setFont(new Font("SansSerif", Font.BOLD, 12));
+        btnEstadisticas.setForeground(new Color(100, 160, 220));
+        btnEstadisticas.setBackground(new Color(10, 12, 16));
+        btnEstadisticas.setFocusPainted(false);
+        btnEstadisticas.setBorder(BorderFactory.createLineBorder(new Color(100, 160, 220), 1));
+        btnEstadisticas.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
         JPanel sur = new JPanel();
         sur.setBackground(new Color(10, 12, 16));
         sur.setBorder(BorderFactory.createEmptyBorder(0, 0, 16, 0));
         sur.add(btnIniciar);
+        sur.add(btnCargar);
+        sur.add(btnEstadisticas);
         add(sur, BorderLayout.SOUTH);
     }
 
     public String getNombre1() { return campoNombre1.getText().trim(); }
     public String getNombre2() { return campoNombre2.getText().trim(); }
-    public JButton getBtnIniciar() { return btnIniciar; }
+    public JButton getBtnIniciar()      { return btnIniciar; }
+    public JButton getBtnCargar()       { return btnCargar; }
+    public JButton getBtnEstadisticas() { return btnEstadisticas; }
 
     public void mostrarError(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);

@@ -43,6 +43,26 @@ public class Juego {
         oponente.setPrimerTurno(false);
     }
 
+    // Constructor para cargar una partida guardada
+    public Juego(Jugador j1, Jugador j2, int numeroTurno, int jugadorActualIdx) {
+        this.jugador1 = j1;
+        this.jugador2 = j2;
+        this.numeroTurno = numeroTurno;
+        this.historialEventos = new LinkedList<>();
+        this.cartasUtilizadas = new HashSet<>();
+
+        if (jugadorActualIdx == 0) {
+            jugadorActual = jugador1;
+            oponente = jugador2;
+        } else {
+            jugadorActual = jugador2;
+            oponente = jugador1;
+        }
+        // En una partida cargada no es el primer turno de nadie
+        jugadorActual.setPrimerTurno(false);
+        oponente.setPrimerTurno(false);
+    }
+
     public void jugarCartaDesdeMano(int index, int indexSacrificio) {
 
         if (cartaJugadasEnTurno) return;

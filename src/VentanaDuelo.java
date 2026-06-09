@@ -25,6 +25,7 @@ public class VentanaDuelo extends JFrame {
     private JButton btnAtacar;
     private JButton btnActivarTrampa;
     private JButton btnTerminarTurno;
+    private JButton btnGuardar;
 
     private JPanel panelManoJ1;
     private JPanel panelManoJ2;
@@ -60,6 +61,7 @@ public class VentanaDuelo extends JFrame {
     public JButton getBtnAtacar()        { return btnAtacar; }
     public JButton getBtnActivarTrampa() { return btnActivarTrampa; }
     public JButton getBtnTerminarTurno() { return btnTerminarTurno; }
+    public JButton getBtnGuardar()       { return btnGuardar; }
 
     // El controlador llama este metodo pasando todos los datos ya listos
     public void actualizarInterfaz(
@@ -107,6 +109,7 @@ public class VentanaDuelo extends JFrame {
         btnAtacar       .setEnabled(false);
         btnActivarTrampa.setEnabled(false);
         btnTerminarTurno.setEnabled(false);
+        btnGuardar      .setEnabled(false);
     }
 
     private JPanel crearHeader() {
@@ -312,15 +315,18 @@ public class VentanaDuelo extends JFrame {
         btnAtacar        = new JButton("ATACAR");
         btnActivarTrampa = new JButton("ACTIVAR TRAMPA");
         btnTerminarTurno = new JButton("TERMINAR TURNO");
+        btnGuardar       = new JButton("GUARDAR");
 
         estilizarBoton(btnJugarCarta,    C_DORADO);
         estilizarBoton(btnAtacar,        new Color(224,  64,  64));
         estilizarBoton(btnActivarTrampa, new Color(160,  80, 200));
         estilizarBoton(btnTerminarTurno, C_GRIS);
+        estilizarBoton(btnGuardar,       new Color(64, 180, 100));
 
         botones.add(btnJugarCarta);
         botones.add(btnAtacar);
         botones.add(btnActivarTrampa);
+        botones.add(btnGuardar);
         footer.add(botones, BorderLayout.WEST);
 
         lblLog = new JLabel("\u00a1El duelo comienza!");
