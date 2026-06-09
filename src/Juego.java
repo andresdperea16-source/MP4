@@ -1,5 +1,9 @@
 import java.util.List;
 import java.util.Random;
+import java.util.Queue;
+import java.util.LinkedList;
+import java.util.Set;
+import java.util.HashSet;
 
 public class Juego {
 
@@ -17,9 +21,15 @@ public class Juego {
     public Jugador getJugador2(){ return jugador2; }
     public int getNumeroTurno(){ return numeroTurno; }
 
+    private Queue<String> historialEventos;
+    private Set<String> cartasUtilizadas;
+
     public Juego(Jugador j1, Jugador j2) {
         this.jugador1 = j1;
         this.jugador2 = j2;
+        
+        this.historialEventos = new LinkedList<>();
+        this.cartasUtilizadas = new HashSet<>();
 
         if (new Random().nextBoolean()) {
             jugadorActual = jugador1;
@@ -38,6 +48,8 @@ public class Juego {
         this.jugador1 = j1;
         this.jugador2 = j2;
         this.numeroTurno = numeroTurno;
+        this.historialEventos = new LinkedList<>();
+        this.cartasUtilizadas = new HashSet<>();
 
         if (jugadorActualIdx == 0) {
             jugadorActual = jugador1;
@@ -60,6 +72,8 @@ public class Juego {
         if (mano.isEmpty() || index < 0 || index >= mano.size()) return;
 
         Carta carta = mano.get(index);
+        
+        cartasUtilizadas.add(carta.getNombre());
 
         if (carta instanceof Monstruo) {
 
@@ -89,8 +103,13 @@ public class Juego {
 
             jugadorActual.getCampo().colocarCartaTrampa((CartaTrampa) carta);
         }
-
         mano.remove(index);
+
+        registrarEvento(
+            jugadorActual.getNombre() +
+            " jugó la carta " +
+            carta.getNombre()
+        );
 
         cartaJugadasEnTurno = true;
     }
@@ -100,6 +119,13 @@ public class Juego {
         if (index < 0 || index >= trampas.size()) return "Trampa inválida.";
         CartaTrampa trampa = trampas.get(index);
         trampa.activar(jugadorActual, oponente);
+        
+        registrarEvento(
+            jugadorActual.getNombre() +
+            " activó la trampa " +
+            trampa.getNombre()
+        );
+
         trampas.remove(index);
         return "¡Trampa activada! " + trampa.getNombre();
     }
@@ -118,6 +144,12 @@ public class Juego {
         if (oponente.getCampo().getCantidadMonstruos() == 0) {
             oponente.setPuntosVida(oponente.getPuntosVida() - atacante.getAtk());
             atacante.setYaAtaco(true);
+
+            registrarEvento(
+                atacante.getNombre() +
+                " realizó un ataque directo"
+            );
+
             return "¡Ataque directo de " + atacante.getNombre() + " por " + atacante.getAtk() + "!";
         }
 
@@ -133,15 +165,37 @@ public class Juego {
                 int daño = atacante.getAtk() - defensor.getAtk();
                 oponente.setPuntosVida(oponente.getPuntosVida() - daño);
                 oponente.getCampo().quitarMonstruo(defensor);
+
+                registrarEvento(
+                    atacante.getNombre() +
+                    " destruyó a " +
+                    defensor.getNombre()
+                );
+
                 return "Destruiste a " + defensor.getNombre() + " y causaste " + daño + " de daño.";
             } else if (atacante.getAtk() < defensor.getAtk()) {
                 int daño = defensor.getAtk() - atacante.getAtk();
                 jugadorActual.setPuntosVida(jugadorActual.getPuntosVida() - daño);
                 jugadorActual.getCampo().quitarMonstruo(atacante);
+                
+                registrarEvento(
+                    defensor.getNombre() +
+                    " destruyó a " +
+                    atacante.getNombre()
+                );
+                
                 return "Tu monstruo fue destruido. Recibes " + daño + " de daño.";
             } else {
                 jugadorActual.getCampo().quitarMonstruo(atacante);
                 oponente.getCampo().quitarMonstruo(defensor);
+                
+                registrarEvento(
+                    atacante.getNombre() +
+                    " y " +
+                    defensor.getNombre() +
+                    " fueron destruidos"
+                );
+
                 return "Ambos monstruos fueron destruidos.";
             }
         } else {
@@ -169,6 +223,12 @@ public class Juego {
             m.setYaAtaco(false);
         }
         cartaJugadasEnTurno = false;
+
+        registrarEvento(
+            "Cambio de turno. Ahora juega " +
+            jugadorActual.getNombre()
+        );
+
         numeroTurno++;
     }
 
@@ -181,4 +241,18 @@ public class Juego {
         if (jugador2.getPuntosVida() <= 0) return jugador1.getNombre();
         return null;
     }
+
+    public void registrarEvento(String evento) {
+        historialEventos.offer(evento);
+    }
+
+    public Queue<String> getHistorialEventos() {
+        return historialEventos;
+    }
+
+    public Set<String> getCartasUtilizadas() {
+        return cartasUtilizadas;
+    }
+
+
 }

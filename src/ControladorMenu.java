@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+import java.util.LinkedList;
 import javax.swing.JOptionPane;
 
 public class ControladorMenu {
@@ -27,8 +27,8 @@ public class ControladorMenu {
         }
 
         // Crear modelo
-        Jugador j1 = new Jugador(n1, 8000, new ArrayList<>(), null, new Campo());
-        Jugador j2 = new Jugador(n2, 8000, new ArrayList<>(), null, new Campo());
+        Jugador j1 = new Jugador(n1, 8000, new LinkedList<>(), null, new Campo());
+        Jugador j2 = new Jugador(n2, 8000, new LinkedList<>(), null, new Campo());
         InicializadorMazo.repartirCartas(j1, j2);
         for (int i = 0; i < 5; i++) {
             j1.getMano().add(j1.getMazo().robarCarta());

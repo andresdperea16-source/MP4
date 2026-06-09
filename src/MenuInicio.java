@@ -100,9 +100,9 @@ public class MenuInicio extends JFrame {
 
     public String getNombre1() { return campoNombre1.getText().trim(); }
     public String getNombre2() { return campoNombre2.getText().trim(); }
-    public JButton getBtnIniciar()       { return btnIniciar; }
-    public JButton getBtnCargar()        { return btnCargar; }
-    public JButton getBtnEstadisticas()  { return btnEstadisticas; }
+    public JButton getBtnIniciar()      { return btnIniciar; }
+    public JButton getBtnCargar()       { return btnCargar; }
+    public JButton getBtnEstadisticas() { return btnEstadisticas; }
 
     public void mostrarError(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);

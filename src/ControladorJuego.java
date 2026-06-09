@@ -164,6 +164,13 @@ public class ControladorJuego {
         Carta robada = actual.getMazo().robarCarta();
         if (robada != null) {
             actual.getMano().add(robada);
+
+            juego.registrarEvento(
+                actual.getNombre() +
+                " robó la carta " +
+                robada.getNombre()
+            );
+
             ventana.setLog("Turno de " + actual.getNombre() + " | Robó: " + robada.getNombre());
         } else {
             ventana.setLog(actual.getNombre() + " no puede robar carta. ¡Pierde el duelo!");

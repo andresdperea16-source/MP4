@@ -7,7 +7,6 @@ import java.util.List;
 /**
  * Clase que se encarga de guardar y cargar partidas,
  * y de manejar el historial de resultados.
- *
  * Formato del archivo de partida (CSV simple):
  *   Linea 1: nombres de jugadores y LP
  *   Linea 2: turno actual y quien es el jugador actual (0 o 1)
@@ -19,6 +18,7 @@ import java.util.List;
  *   Linea 11: cartas restantes en mazo del jugador 1
  *   Linea 12: cartas restantes en mazo del jugador 2
  */
+
 public class GestorArchivos {
 
     // Nombre fijo del archivo de partida guardada
@@ -38,26 +38,26 @@ public class GestorArchivos {
         // Determinar quien es el jugador actual (0 = j1, 1 = j2)
         int turnoActual = juego.getJugadorActual() == j1 ? 0 : 1;
 
-        // Linea 1: nombre1, lp1, nombre2, lp2
+        // Linea 1
         pw.println(j1.getNombre() + "," + j1.getPuntosVida() + ","
                 + j2.getNombre() + "," + j2.getPuntosVida());
 
-        // Linea 2: turno, jugadorActual
+        // Linea 2
         pw.println(juego.getNumeroTurno() + "," + turnoActual);
 
-        // Lineas 3-6: datos del jugador 1
+        // Lineas 3-6
         guardarMano(pw, j1.getMano());
         guardarMonstruosCampo(pw, j1.getCampo().getMonstruos());
         guardarCartasMagicas(pw, j1.getCampo().getCartasMagicas());
         guardarCartasTrampa(pw, j1.getCampo().getCartasTrampa());
 
-        // Lineas 7-10: datos del jugador 2
+        // Lineas 7-10
         guardarMano(pw, j2.getMano());
         guardarMonstruosCampo(pw, j2.getCampo().getMonstruos());
         guardarCartasMagicas(pw, j2.getCampo().getCartasMagicas());
         guardarCartasTrampa(pw, j2.getCampo().getCartasTrampa());
 
-        // Lineas 11-12: cartas restantes en el mazo
+        // Lineas 11-12
         guardarMazo(pw, j1.getMazo());
         guardarMazo(pw, j2.getMazo());
 
@@ -65,8 +65,7 @@ public class GestorArchivos {
     }
 
     private static void guardarMano(PrintWriter pw, List<Carta> mano) {
-        // Guarda el tipo y nombre de cada carta en la mano
-        // Formato: tipo:nombre  donde tipo puede ser M (monstruo), G (magia), T (trampa)
+        // Tipo y nombre de cada carta en la manon: M (monstruo), G (magia), T (trampa)
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < mano.size(); i++) {
             Carta c = mano.get(i);
@@ -134,7 +133,7 @@ public class GestorArchivos {
     public static Juego cargarPartida() throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(ARCHIVO_PARTIDA));
 
-        // Linea 1: nombres y LP
+        // Linea 1
         String linea1 = br.readLine();
         String[] datos1 = linea1.split(",");
         String nombre1 = datos1[0];
@@ -142,7 +141,7 @@ public class GestorArchivos {
         String nombre2 = datos1[2];
         int lp2 = Integer.parseInt(datos1[3]);
 
-        // Linea 2: turno y jugador actual
+        // Linea 2
         String linea2 = br.readLine();
         String[] datos2 = linea2.split(",");
         int numeroTurno = Integer.parseInt(datos2[0]);
@@ -290,17 +289,15 @@ public class GestorArchivos {
         return null;
     }
 
-    // =====================================================================
     // VERIFICAR SI HAY PARTIDA GUARDADA
-    // =====================================================================
+
     public static boolean hayPartidaGuardada() {
         File f = new File(ARCHIVO_PARTIDA);
         return f.exists() && f.length() > 0;
     }
 
-    // =====================================================================
     // GUARDAR RESULTADO EN EL HISTORIAL
-    // =====================================================================
+
     public static void guardarResultado(String nombre1, String nombre2,
                                          String ganador, int turnos,
                                          int lpFinal1, int lpFinal2) {
@@ -320,9 +317,8 @@ public class GestorArchivos {
         }
     }
 
-    // =====================================================================
     // LEER ESTADISTICAS DEL HISTORIAL
-    // =====================================================================
+
     public static String leerEstadisticas() {
         File f = new File(ARCHIVO_RESULTADOS);
         if (!f.exists()) {
