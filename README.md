@@ -49,7 +49,11 @@ Se usa un `HashSet<String>` para registrar los nombres de cartas activadas duran
 El registro de Reflection usa un `HashMap` para indexar constructores de cartas por nombre.
 **Justificación:** Se necesita acceso por clave (nombre de carta) en O(1). Un HashMap es la estructura natural para este índice. Permite crear cualquier carta por nombre sin if/switch.
 
-### 4. `Stack` — Mazo de robo (`Mazo.java`)
+### 4. `LinkedList` — Mano del jugador (`ControladorMenu.java`, `Juego.java`)
+La mano de cada jugador y la implementación interna de la `Queue` de historial usan `LinkedList`.
+**Justificación:** La mano del jugador necesita inserciones y eliminaciones frecuentes en cualquier posición (robar carta, jugar carta). `LinkedList` es O(1) para esas operaciones, mientras que un `ArrayList` sería O(n) por el desplazamiento. También implementa `Queue` de forma natural al soportar operaciones en ambos extremos.
+
+### 5. `Stack` — Mazo de robo (`Mazo.java`)
 El mazo del jugador modela una pila: las cartas se sacan desde la parte superior.
 **Justificación:** Un mazo de Yu-Gi-Oh funciona como una pila LIFO — robas la carta de arriba. La `Stack` o `LinkedList` usada como pila modela exactamente este comportamiento.
 
