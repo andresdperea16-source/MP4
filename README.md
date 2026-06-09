@@ -41,7 +41,7 @@ El proyecto usa cuatro estructuras de datos, cada una donde tiene sentido semán
 El historial de eventos del turno usa una cola (`LinkedList` como implementación de `Queue`).
 **Justificación:** Los eventos se procesan en orden FIFO — el primero en ocurrir es el primero en mostrarse en el log. Una cola modela exactamente esa semántica. Un `ArrayList` serviría, pero la cola deja clara la intención de "procesamiento en orden de llegada".
 
-### 2. `Set<String>` — Cartas ya utilizadas (`Juego.java`)
+### 2. `HashSet<String>` — Cartas ya utilizadas (`Juego.java`)
 Se usa un `HashSet<String>` para registrar los nombres de cartas activadas durante la partida.
 **Justificación:** El set garantiza unicidad sin duplicados y la verificación `contains()` es O(1). Semánticamente modela "conjunto de cartas únicas ya jugadas", que es exactamente un conjunto matemático.
 
@@ -57,9 +57,11 @@ La mano de cada jugador y la implementación interna de la `Queue` de historial 
 El mazo del jugador modela una pila: las cartas se sacan desde la parte superior.
 **Justificación:** Un mazo de Yu-Gi-Oh funciona como una pila LIFO — robas la carta de arriba. La `Stack` o `LinkedList` usada como pila modela exactamente este comportamiento.
 
----
+### 6. `ConcurrentHashMap` — Caché de imágenes (`ImagenCartaCache.java`)
+Las imágenes de cartas se cachean en un `ConcurrentHashMap<String, ImageIcon>`.
+**Justificación:** La interfaz gráfica puede cargar imágenes desde múltiples hilos. `ConcurrentHashMap` garantiza acceso seguro en concurrencia sin bloquear todo el mapa, a diferencia de un `HashMap` normal que no es thread-safe.
 
-## Patrones de diseño implementados
+---
 
 ### 1. Singleton — `GestorArchivos` y `RegistroCartas`
 **Ubicación:** `src/GestorArchivos.java`, `src/RegistroCartas.java`
