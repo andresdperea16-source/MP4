@@ -21,6 +21,20 @@ import java.util.List;
 
 public class GestorArchivos {
 
+    private static GestorArchivos instancia;
+
+    private GestorArchivos() {
+    }
+
+    public static GestorArchivos getInstancia() {
+
+        if(instancia == null) {
+            instancia = new GestorArchivos();
+        }
+
+        return instancia;
+    }
+
     // Nombre fijo del archivo de partida guardada
     private static final String ARCHIVO_PARTIDA = "partida_guardada.csv";
     // Nombre fijo del archivo de historial de resultados
@@ -30,13 +44,18 @@ public class GestorArchivos {
     // GUARDAR PARTIDA
     // =====================================================================
     public static void guardarPartida(Juego juego) throws IOException {
+        
+        GestorArchivos.getInstancia();
+        
         PrintWriter pw = new PrintWriter(new FileWriter(ARCHIVO_PARTIDA));
 
-        Jugador j1 = juego.getJugador1();
-        Jugador j2 = juego.getJugador2();
+        JuegoMemento estado = juego.guardarEstado();
+
+        Jugador j1 = estado.getJugador1();
+        Jugador j2 = estado.getJugador2();
 
         // Determinar quien es el jugador actual (0 = j1, 1 = j2)
-        int turnoActual = juego.getJugadorActual() == j1 ? 0 : 1;
+        int turnoActual = estado.getJugadorActualIdx();
 
         // Linea 1
         pw.println(j1.getNombre() + "," + j1.getPuntosVida() + ","
@@ -179,9 +198,14 @@ public class GestorArchivos {
         Jugador j2 = new Jugador(nombre2, lp2, manoJ2, mazoJ2, campoJ2);
 
         // Crear el juego y restaurar el estado del turno
-        Juego juego = new Juego(j1, j2, numeroTurno, jugadorActualIdx);
+        JuegoMemento estado = new JuegoMemento(
+                    j1,
+                    j2,
+                    numeroTurno,
+                    jugadorActualIdx
+            );
 
-        return juego;
+        return Juego.restaurarEstado(estado);
     }
 
     private static List<Carta> leerMano(String linea) {
@@ -267,31 +291,42 @@ public class GestorArchivos {
 
     // Recrea un monstruo con sus stats originales a partir del nombre
     private static Monstruo crearMonstruoPorNombre(String nombre) {
-        // Buscamos en el mazo completo la carta con ese nombre
-        Mazo mazoRef = InicializadorMazo.crearMazoCompleto();
-        for (Carta c : mazoRef.getCartas()) {
-            if (c instanceof Monstruo && c.getNombre().equals(nombre)) {
-                return (Monstruo) c;
-            }
+
+        Carta carta = CartaFactory.crearCarta(nombre);
+
+        if(carta instanceof Monstruo) {
+            return (Monstruo) carta;
         }
+
         return null;
     }
 
     private static CartaMagica crearMagiaPorNombre(String nombre) {
-        if (nombre.equals("Pot of Greed"))           return new PotOfGreed();
-        if (nombre.equals("Dian Keto the Cure Master")) return new DianKetotheCureMaster();
+
+        Carta carta = CartaFactory.crearCarta(nombre);
+
+        if(carta instanceof CartaMagica) {
+            return (CartaMagica) carta;
+        }
+
         return null;
     }
 
     private static CartaTrampa crearTrampaPorNombre(String nombre) {
-        if (nombre.equals("Trap Hole"))    return new TrapHole();
-        if (nombre.equals("Mirror Force")) return new MirrorForce();
+
+        Carta carta = CartaFactory.crearCarta(nombre);
+
+        if(carta instanceof CartaTrampa) {
+            return (CartaTrampa) carta;
+        }
+
         return null;
     }
 
     // VERIFICAR SI HAY PARTIDA GUARDADA
 
     public static boolean hayPartidaGuardada() {
+        GestorArchivos.getInstancia();
         File f = new File(ARCHIVO_PARTIDA);
         return f.exists() && f.length() > 0;
     }
@@ -302,6 +337,7 @@ public class GestorArchivos {
                                          String ganador, int turnos,
                                          int lpFinal1, int lpFinal2) {
         try {
+            GestorArchivos.getInstancia();
             // Usamos append=true para agregar al final del archivo
             PrintWriter pw = new PrintWriter(new FileWriter(ARCHIVO_RESULTADOS, true));
             String fecha = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date());
@@ -320,6 +356,9 @@ public class GestorArchivos {
     // LEER ESTADISTICAS DEL HISTORIAL
 
     public static String leerEstadisticas() {
+
+        GestorArchivos.getInstancia();
+
         File f = new File(ARCHIVO_RESULTADOS);
         if (!f.exists()) {
             return "No hay partidas registradas todavia.";

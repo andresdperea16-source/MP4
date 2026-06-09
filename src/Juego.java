@@ -254,5 +254,27 @@ public class Juego {
         return cartasUtilizadas;
     }
 
+    public JuegoMemento guardarEstado() {
+
+        int jugadorActualIdx =
+                (jugadorActual == jugador1) ? 0 : 1;
+
+        return new JuegoMemento(
+                jugador1,
+                jugador2,
+                numeroTurno,
+                jugadorActualIdx
+        );
+    }
+
+    public static Juego restaurarEstado(JuegoMemento memento) {
+
+        return new Juego(
+                memento.getJugador1(),
+                memento.getJugador2(),
+                memento.getNumeroTurno(),
+                memento.getJugadorActualIdx()
+        );
+    }
 
 }
